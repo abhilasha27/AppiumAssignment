@@ -1,4 +1,4 @@
-package com.example.viberappium;
+package com.example.mmtappium;
 
 import org.junit.Test;
 
