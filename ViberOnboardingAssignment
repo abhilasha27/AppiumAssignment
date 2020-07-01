@@ -1,0 +1,109 @@
+package com.example.viberappium;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import org.testng.Assert;
+import org.junit.After;
+import org.junit.Before;
+import org.openqa.selenium.By;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.Test;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.MobileElement;
+
+
+public class UserOnboardingTest {
+
+    public static AppiumDriver<MobileElement> driver;
+
+    @Before
+    public void setUp() throws MalformedURLException {
+
+        //File app= new File("C:\\Users\\abhilashas\\Downloads\\viber.apk");(since app already isntalled)
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        desiredCapabilities.setCapability("platformName", "Android");
+        desiredCapabilities.setCapability("automationName", "UIAutomator2");
+        desiredCapabilities.setCapability("appPackage", "com.viber.voip");
+        desiredCapabilities.setCapability("appActivity", "com.viber.voip.WelcomeActivity");
+        desiredCapabilities.setCapability("deviceName", "emulator-5554");
+        desiredCapabilities.setCapability("autoAcceptAlerts", true);
+        URL remoteUrl = new URL("http://localhost:4723/wd/hub");
+
+    }
+
+
+    @Test
+    public void testViberUserOnboarding() {
+
+
+        MobileElement el1 = (MobileElement) driver.findElementById("com.viber.voip:id/okBtn").click();
+        MobileElement el2 = (MobileElement) driver.findElementById("com.viber.voip:id/registration_country_btn").click();
+        MobileElement el3 = (MobileElement) driver.findElementById("com.viber.voip:id/search_src_text");
+        el3.sendKeys("india");
+        MobileElement el4 = (MobileElement) driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]");
+        el4.click();
+        MobileElement el5 = (MobileElement) driver.findElementById("com.viber.voip:id/registration_phone_field");
+        el5.sendKeys("8237938556");
+        MobileElement el6 = (MobileElement) driver.findElementById("com.viber.voip:id/btn_continue");
+        el6.click();
+
+        MobileElement result= (MobileElement) driver.findElement(By.xpath("//android.widget.TextView[1]"));
+        Assert.assertEquals(result.getText(), "Is this your phone number?");
+
+        MobileElement el7 = (MobileElement) driver.findElementById("com.viber.voip:id/yes_btn");
+        el7.click();
+
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        ((MobileElement) driver).openNotifications();
+
+        //Need to add code for reading SMS from notification
+       // string otp = driver.findElementByXpath("//*[contains(@text, "Your OTP is")]").getText().split(" is")[1];
+
+        driver.navigate().back();
+
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+        MobileElement result1= (MobileElement) driver.findElement(By.xpath("//android.widget.TextView"));
+        Assert.assertEquals(result1.getText(), "Activating Viber");
+
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+
+        MobileElement el8 = (MobileElement) driver.findElementById("com.android.permissioncontroller:id/permission_allow_button");
+        el8.click();
+        MobileElement el9 = (MobileElement) driver.findElementById("com.android.permissioncontroller:id/permission_allow_button");
+        el9.click();
+        MobileElement el10 = (MobileElement) driver.findElementById("com.viber.voip:id/view_with_description_main_view_id");
+        el10.sendKeys("264420");
+        MobileElement el11 = (MobileElement) driver.findElementById("com.viber.voip:id/nameView");
+        el11.sendKeys(" Ethan hunt");
+        MobileElement el13 = (MobileElement) driver.findElementById("com.viber.voip:id/birthDateView");
+        el13.click();
+
+        driver.findElement(By.xpath("//android.widget.NumberPicker[@index='0']")).sendKeys("Feb");
+        driver.findElement(By.xpath("//android.widget.NumberPicker[@index='1']")).sendKeys("27");
+        driver.findElement(By.xpath("//android.widget.NumberPicker[@index='2']")).sendKeys("1990");
+
+        MobileElement el14 = (MobileElement) driver.findElementById("android:id/button1");
+        el14.click();
+
+
+        MobileElement el15 = (MobileElement) driver.findElementById("com.android.permissioncontroller:id/permission_allow_button");
+        el15.click();
+        MobileElement el16 = (MobileElement) driver.findElementById("com.android.permissioncontroller:id/permission_allow_button");
+        el16.click();
+
+
+    }
+
+    @After
+    public void End() {
+        driver.quit();
+    }
+}
+
